@@ -1,0 +1,9 @@
+{
+    "env" : {
+        "POSTGRES_USER" : "postgres",
+        "POSTGRES_HOST" : "localhost",
+        "POSTGRES_DATABASE" : "ecommerce",
+        "POSTGRES_PASSWORD" : "1",
+        "POSTGRES_PORT" : "5433"
+    }
+}

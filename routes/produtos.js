@@ -4,76 +4,85 @@ const postgres = require('../postgres');
 
 // RETORNA TODOS OS PRODUTOS
 router.get('/', (req, res, next) =>{
-    res.status(200).send({
-        mensagem: 'retornar todos os produtos'
-    });
+    postgres.query('SELECT * from produtos', (error, resp) => {
+        if (error) {
+            return res.status(500).send({
+                error: error,
+                response: null
+            });
+        }
+        console.log(resp)
+        const response = resp.rows;
+        res.status(200).send({
+                 response
+             });
+      })
 });
 
-//INSERE UM PRODUTOS
+//INSERE UM PRODUTO
 router.post('/', (req, res, next) => {
-    async function postPed(){
-        try {
-            console.log('iniciando conexão')
-            await postgres.connect();
-            console.log('Conexão feita')
-            const resultado = await postgres.query('INSERT INTO produtos (nome, preco) VALUES ($1, $2)',[req.body.nome, req.body.preco])
-        } catch (ex) {
-            console.log('Ocorreu um erro' + ex)
-        } finally{
-            await postgres.end()
-            console.log('Desconectou do banco')
+    postgres.query('INSERT INTO produtos (nome, preco) VALUES ($1, $2)',[req.body.nome, req.body.preco], (error, resp) => {
+        if (error) {
+            return res.status(500).send({
+                error: error,
+                response: null
+            });
         }
-    }
-    postPed();
-    // postgres.connect(() => {
-    //     postgres.query(  
-    //          'INSERT INTO produtos (nome, preco) VALUES ($1, $2)',
-    //          [req.body.nome, req.body.preco])
-    //         .then((error, results) => {
-    //         //     if (error) {
-    //         //         return res.status(500).send({
-    //         //              error: error,
-    //         //              response: null
-    //         //        });
-    //         //    }
-    //             console.log(results)           
-    //             res.status(201).send({
-    //                      mensagem: 'Produto inserido com sucesso',
-    //                      //id_produto: results.insertId
-    //                  }); 
-    //         })
-    //         .finally(() => postgres.end());  
-    // });   
+        console.log(resp)
+        res.status(201).send({
+                 mensagem: 'Produto inserido com sucesso'
+             });
+      });
 });
 
 //RETORNA OS DADOS DE UM PRODUTO
 router.get('/:id_produto', (req, res, next) => {
-    const id = req.params.id_produto;
-
-    if (id === 'especial') {
+    //const id = req.params.id_produto;
+    postgres.query('SELECT * from produtos where id = $1', [req.params.id_produto],(error, resp) => {
+        if (error) {
+            return res.status(500).send({
+                error: error,
+                response: null
+            });
+        }
+        console.log(resp)
+        const response = resp.rows;
         res.status(200).send({
-            mensagem: 'Você descobriu o ID especial',
-            id: id
-        });
-    } else {
-        res.status(200).send({
-            mensagem: 'Você passou um ID'
-        })
-    }
+                 response
+             });
+      })
 });
 
 //ALTERA UM PRODUTO
-router.patch('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'produto alterado'
-    });
+router.patch('/:id_produto', (req, res, next) => {
+    postgres.query('UPDATE produtos set nome = $2, preco = $3 where id = $1', [req.params.id_produto, req.body.nome, req.body.preco],(error, resp) => {
+        if (error) {
+            return res.status(500).send({
+                error: error,
+                response: null
+            });
+        }
+        console.log(resp)
+        res.status(200).send({
+                mensagem: 'produto alterado'
+             });
+      })
 });
 
 //EXCLUI UM PRODUTO
-router.delete('/', (req, res, next) => {
-    res.status(201).send({
-        mensagem: 'produto excluído'
-    });
+router.delete('/:id_produto', (req, res, next) => {
+    postgres.query('DELETE from produtos where id = $1', [req.params.id_produto],(error, resp) => {
+        if (error) {
+            return res.status(500).send({
+                error: error,
+                response: null
+            });
+        }
+        console.log(resp)
+        res.status(200).send({
+                mensagem: 'produto excluído'
+             });
+      })
 });
 
 module.exports = router;

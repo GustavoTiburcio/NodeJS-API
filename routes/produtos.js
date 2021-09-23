@@ -20,13 +20,13 @@ router.get('/', (req, res, next) =>{
                     preco: prod.preco,
                     request: {
                         tipo: 'GET',
-                        descricao: 'Retorna todos os produtos',
+                        descricao: 'Retorna os detalhes de um produto específico',
                         url: 'http://localhost:3000/produtos/' + prod.id
                     }
                 }
             })
         }
-        res.status(200).send(response);
+        return res.status(200).send(response);
       })
 });
 
@@ -46,13 +46,13 @@ router.post('/', (req, res, next) => {
                 nome: req.body.nome,
                 preco: req.body.preco,
                 request: {
-                    tipo: 'POST',
-                    descricao: 'Insere um produto',
+                    tipo: 'GET',
+                    descricao: 'Retorna todos os produtos',
                     url: 'http://localhost:3000/produtos'
                 }
             }
         }
-        res.status(201).send(response);
+        return res.status(201).send(response);
       });
 });
 
@@ -78,13 +78,13 @@ router.get('/:id_produto', (req, res, next) => {
                 preco: result.rows[0].preco,
                 request: {
                     tipo: 'GET',
-                    descricao: 'Retorna um produto',
+                    descricao: 'Retorna todos os produtos',
                     url: 'http://localhost:3000/produtos'
                 }
             }
         }
         const resultado = result.rows;
-        res.status(200).send(response);
+        return res.status(200).send(response);
       })
 });
 
@@ -97,9 +97,20 @@ router.patch('/', (req, res, next) => {
             });
         }
         console.log(result)
-        res.status(202).send({
-                mensagem: 'produto alterado com sucesso'
-             });
+        const response = {
+            mensagem: 'Produto atualizado com sucesso',
+            produtoAtualizado:{
+                id_produto: req.body.id_produto,
+                nome: req.body.nome,
+                preco: req.body.preco,
+                request: {
+                    tipo: 'GET',
+                    descricao: 'Retorna os detalhes de um produto em especifico',
+                    url: 'http://localhost:3000/produtos/' + req.body.id_produto
+                }
+            }
+        }
+        return res.status(202).send(response);
       })
 });
 
@@ -112,9 +123,19 @@ router.delete('/', (req, res, next) => {
             });
         }
         console.log(result)
-        res.status(202).send({
-                mensagem: 'produto excluído com sucesso'
-             });
+        const response = {
+            mensagem: 'Produto removido com sucesso',
+            request: {
+                tipo: 'POST',
+                descricao: 'Insere um produto',
+                url: 'http://localhost:3000/produtos',
+                body: {
+                    nome: 'String',
+                    preco: 'Number'
+                }
+            }
+        }
+        return res.status(202).send(response);
       })
 });
 

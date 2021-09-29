@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postgres = require('../postgres');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 router.post('/cadastro', (req, res, next) => {
     postgres.query('SELECT * FROM usuarios WHERE email = $1', [req.body.email], (error, result) => {
@@ -28,6 +29,36 @@ router.post('/cadastro', (req, res, next) => {
             });
         }
     });
+});
+
+router.post('/login', (req, res, next) => {
+    postgres.query(`SELECT * FROM usuarios WHERE email = $1`, [req.body.email], (error, result) => {
+        console.log(result);
+        if (error) { return res.status(500).send({error: error})}
+        if (result.rowCount < 1) {
+            return res.status(401).send({ mensagem: 'Falha na autenticação' });
+        }
+        bcrypt.compare(req.body.senha, result.rows[0].senha, (error, resultado) => {
+            if (error) {
+                return res.status(401).send({ mensagem: 'Falha na autenticação' });
+            }
+            if (resultado) {
+                const token = jwt.sign({
+                    id_usuario: result.rows[0].id_usuario,
+                    email: result.rows[0].email
+                }, process.env.JWT_KEY,
+                {
+                    expiresIn: '1h'
+                });            
+                return res.status(200).send({
+                    mensagem: 'Autenticado com sucesso',
+                    token: token
+                });
+            }
+            return res.status(401).send({ mensagem: 'Falha na autenticação' }); 
+        });
+        
+    });    
 });
 
 module.exports = router;

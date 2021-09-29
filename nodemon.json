@@ -4,6 +4,8 @@
         "POSTGRES_HOST" : "localhost",
         "POSTGRES_DATABASE" : "ecommerce",
         "POSTGRES_PASSWORD" : "1",
-        "POSTGRES_PORT" : "5433"
+        "POSTGRES_PORT" : "5433",
+
+        "JWT_KEY": "segredo"
     }
 }

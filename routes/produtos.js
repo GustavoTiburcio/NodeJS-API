@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postgres = require('../postgres');
 const multer =  require('multer');
+const login = require('../middleware/login');
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -59,15 +60,14 @@ router.get('/', (req, res, next) =>{
 });
 
 //INSERE UM PRODUTO
-router.post('/', upload.single('imagem_produto'),(req, res, next) => {
-    console.log(req.file);
+router.post('/', login.obrigatorio, upload.single('imagem_produto'), (req, res, next) => {
+    console.log(req.usuario);
     postgres.query('INSERT INTO produtos (nome, preco, imagem_produto) VALUES ($1, $2, $3) RETURNING id',[req.body.nome, req.body.preco, req.file.path], (error, result) => {
         if (error) {
             return res.status(500).send({
                 error: error
             });
         }
-        console.log(result)
         const response = {
             mensagem: 'Produto inserido com sucesso',
             produtoCriado:{
@@ -120,7 +120,7 @@ router.get('/:id_produto', (req, res, next) => {
 });
 
 //ALTERA UM PRODUTO
-router.patch('/', (req, res, next) => {
+router.patch('/', login.obrigatorio, (req, res, next) => {
     postgres.query('UPDATE produtos SET nome = $1, preco = $2 WHERE id = $3', [req.body.nome, req.body.preco, req.body.id_produto],(error, result) => {
         if (error) {
             return res.status(500).send({
@@ -146,7 +146,7 @@ router.patch('/', (req, res, next) => {
 });
 
 //EXCLUI UM PRODUTO
-router.delete('/', (req, res, next) => {
+router.delete('/', login.obrigatorio, (req, res, next) => {
     postgres.query('DELETE FROM produtos WHERE id = $1', [req.body.id_produto],(error, result) => {
         if (error) {
             return res.status(500).send({

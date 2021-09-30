@@ -33,7 +33,6 @@ router.post('/cadastro', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     postgres.query(`SELECT * FROM usuarios WHERE email = $1`, [req.body.email], (error, result) => {
-        console.log(result);
         if (error) { return res.status(500).send({error: error})}
         if (result.rowCount < 1) {
             return res.status(401).send({ mensagem: 'Falha na autenticação' });

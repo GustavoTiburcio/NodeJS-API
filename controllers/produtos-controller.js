@@ -19,7 +19,7 @@ exports.getProdutos = (req, res, next) =>{
                     request: {
                         tipo: 'GET',
                         descricao: 'Retorna os detalhes de um produto específico',
-                        url: 'http://localhost:3000/produtos/' + prod.id
+                        url: 'https://rest-api-tiburcio.herokuapp.com/produtos/' + prod.id
                     }
                 }
             })
@@ -46,7 +46,7 @@ exports.postProduto = (req, res, next) => {
                 request: {
                     tipo: 'GET',
                     descricao: 'Retorna todos os produtos',
-                    url: 'http://localhost:3000/produtos'
+                    url: 'https://rest-api-tiburcio.herokuapp.com/produtos'
                 }
             }
         }
@@ -77,7 +77,7 @@ exports.getProduto = (req, res, next) => {
                 request: {
                     tipo: 'GET',
                     descricao: 'Retorna todos os produtos',
-                    url: 'http://localhost:3000/produtos'
+                    url: 'https://rest-api-tiburcio.herokuapp.com/produtos'
                 }
             }
         }
@@ -103,7 +103,7 @@ exports.updateProduto = (req, res, next) => {
                 request: {
                     tipo: 'GET',
                     descricao: 'Retorna os detalhes de um produto em especifico',
-                    url: 'http://localhost:3000/produtos/' + req.body.id_produto
+                    url: 'https://rest-api-tiburcio.herokuapp.com/produtos/' + req.body.id_produto
                 }
             }
         }
@@ -124,7 +124,7 @@ exports.deleteProduto = (req, res, next) => {
             request: {
                 tipo: 'POST',
                 descricao: 'Insere um produto',
-                url: 'http://localhost:3000/produtos',
+                url: 'https://rest-api-tiburcio.herokuapp.com/produtos',
                 body: {
                     nome: 'String',
                     preco: 'Number'

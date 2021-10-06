@@ -32,7 +32,7 @@ exports.getPedidos = (req, res, next) =>{
                     request: {
                         tipo: 'GET',
                         descricao: 'Retorna os detalhes de um pedido específico',
-                        url: 'http://localhost:3000/pedido/' + pedido.id
+                        url: 'https://rest-api-tiburcio.herokuapp.com/pedido/' + pedido.id
                     }
                 }
             })
@@ -69,7 +69,7 @@ exports.postPedido = (req, res, next) => {
                     request: {
                         tipo: 'GET',
                         descricao: 'Retorna todos os pedidos',
-                        url: 'http://localhost:3000/pedidos'
+                        url: 'https://rest-api-tiburcio.herokuapp.com/pedidos'
                     }
                 }
             }
@@ -99,7 +99,7 @@ exports.getPedido = (req, res, next) => {
                 request: {
                     tipo: 'GET',
                     descricao: 'Retorna todos os pedidos',
-                    url: 'http://localhost:3000/pedidos'
+                    url: 'https://rest-api-tiburcio.herokuapp.com/pedidos'
                 }
             }
         }
@@ -121,7 +121,7 @@ exports.deletePedido = (req, res, next) => {
             request: {
                 tipo: 'POST',
                 descricao: 'Insere um pedido',
-                url: 'http://localhost:3000/pedidos',
+                url: 'https://rest-api-tiburcio.herokuapp.com/pedidos',
                 body: {
                     id_produto: 'Number',
                     quantidade: 'Number'
